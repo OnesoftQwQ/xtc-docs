@@ -1,0 +1,23 @@
+name: Sync newest changes to server
+
+on:
+  push:
+    branches: [ main ]  # 触发分支（按需修改）
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: SSH Execute Commands
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ 22 }}  # 默认22端口
+          script: |
+            cd ${{ secrets.DIR }}
+            git pull
